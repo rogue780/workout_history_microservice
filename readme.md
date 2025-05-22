@@ -114,5 +114,5 @@ else:
 
 ## Sequence Diagram
 
-![image](https://github.com/rogue780/workout_history_microservice/blob/main/sequence_diagram.png)
+![image](https://raw.githubusercontent.com/rogue780/workout_history_microservice/refs/heads/main/sequence_diagram.png)
 
