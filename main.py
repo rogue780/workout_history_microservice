@@ -65,6 +65,7 @@ def log_exercise(
     notes: Optional[str] = Form(""),
     date_entered: Optional[str] = Form(None)
 ):
+    print(f"Received data: exercise={exercise}, muscle_group={muscle_group}, sets={sets}, repetitions_per_set={repetitions_per_set}, weight_per_set={weight_per_set}, notes={notes}, date_entered={date_entered}")
     date_entered = date_entered or datetime.utcnow().isoformat()
     conn = get_conn()
     cursor = conn.cursor()
@@ -79,6 +80,7 @@ def log_exercise(
     exercise_id = cursor.lastrowid
     conn.commit()
     conn.close()
+    print(f"Logged exercise with ID: {exercise_id}")
     return {"id": exercise_id, "message": "Exercise logged"}
 
 @app.get("/exercise_history")
@@ -86,6 +88,8 @@ def get_exercise_history(
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
 ):
+    print(f"Received data: start_date={start_date}, end_date={end_date}")
+
     conn = get_conn()
     cursor = conn.cursor()
     query = "SELECT * FROM workout_history WHERE 1=1"
@@ -113,11 +117,14 @@ def get_exercise_history(
             "weight_per_set": [float(x) for x in row["weight_per_set"].split(",")],
             "notes": row["notes"]
         })
+    
+    print(f"Returning data: {exercise_history}")
 
     return exercise_history
 
 @app.delete("/exercise_history/{exercise_id}", dependencies=[Depends(basic_auth)])
 def delete_exercise(exercise_id: int):
+    print(f"Received request to delete exercise with ID: {exercise_id}")
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM workout_history WHERE id=?", (exercise_id,))
@@ -128,4 +135,5 @@ def delete_exercise(exercise_id: int):
     cursor.execute("DELETE FROM workout_history WHERE id=?", (exercise_id,))
     conn.commit()
     conn.close()
+    print(f"Deleted exercise with ID: {exercise_id}")
     return {"message": "Exercise deleted", "id": exercise_id}
