@@ -18,6 +18,13 @@ pip install -r requirements.txt
 ```
 ## Configuration
 1. **Authentication:**
+
+```bash
+cp .env.example .env
+```
+
+Modify .env
+
 ```dotenv
 BASIC_AUTH_USERNAME=admin
 BASIC_AUTH_PASSWORD=secret
